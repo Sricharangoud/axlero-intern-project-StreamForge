@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamForge — Distributed Python Event Processor</title>
+  <meta name="description" content="Production-ready real-time telemetry dashboard for StreamForge distributed Python event processor.">
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Application CSS Files -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <!-- Chart.js Library CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. GLOBAL OVERLAYS (Toast Notifications & Loading Spinner)
+       ========================================================================== -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loading-text" style="color: var(--text-secondary); font-size: 0.9rem;">Connecting to StreamForge Backend...</p>
+  </div>
+
+  <!-- ==========================================================================
+       2. AUTHENTICATION / LOGIN VIEW OVERLAY
+       ========================================================================== -->
+  <div id="login-view" class="login-overlay">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo"><i class="fa-solid fa-bolt"></i></div>
+        <h2 style="font-size: 1.5rem; font-weight: 700;">StreamForge</h2>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Distributed Event Processing Engine</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="username" class="form-label">Username / Email</label>
+          <input type="text" id="username" class="form-control" placeholder="admin@streamforge.io" required>
+          <span class="error-msg" id="username-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+          <span class="error-msg" id="password-error"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In to System
+        </button>
+      </form>
+      
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.8rem; color: var(--text-dim);">
+        <p>Demo Credentials: <strong>admin</strong> / <strong>password123</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       3. TOP NAVBAR
+       ========================================================================== -->
+  <header id="app-header" class="navbar hidden">
+    <div class="navbar-left">
+      <button id="toggle-sidebar-btn" class="toggle-sidebar-btn" title="Toggle Sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="brand-title">
+        <i class="fa-solid fa-bolt brand-icon"></i>
+        <span>StreamForge</span>
+      </div>
+    </div>
+
+    <div class="navbar-right">
+      <div class="api-status-indicator">
+        <span id="api-status-dot" class="status-dot"></span>
+        <span id="api-status-text">FastAPI Connected</span>
+      </div>
+
+      <div id="live-clock" class="live-clock">00:00:00 UTC</div>
+
+      <div class="user-profile-btn" id="user-menu-btn">
+        <div class="avatar-circle" id="user-avatar">A</div>
+        <span id="user-name">Admin</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       4. SIDEBAR NAVIGATION
+       ========================================================================== -->
+  <aside id="app-sidebar" class="sidebar hidden">
+    <ul class="nav-menu">
+      <li class="nav-item active" data-view="dashboard">
+        <a href="#dashboard">
+          <i class="fa-solid fa-chart-line nav-icon"></i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item" data-view="sensors">
+        <a href="#sensors">
+          <i class="fa-solid fa-microchip nav-icon"></i>
+          <span class="nav-text">Sensor Data</span>
+        </a>
+      </li>
+      <li class="nav-item" data-view="alerts">
+        <a href="#alerts">
+          <i class="fa-solid fa-triangle-exclamation nav-icon"></i>
+          <span class="nav-text">Alerts & Incidents</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       5. MAIN CONTENT SHELL & PAGES
+       ========================================================================== -->
+  <main id="main-content" class="main-content hidden">
+    
+    <!-- ----------------------------------------------------------------------
+         VIEW 1: DASHBOARD
+         ---------------------------------------------------------------------- -->
+    <section id="dashboard-view" class="view-section">
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">Real-Time Telemetry Dashboard</h1>
+          <p class="page-subtitle">Monitoring Kafka events, worker metrics & IoT sensor stream</p>
+        </div>
+        <button id="refresh-dashboard-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-rotate"></i> Refresh Metrics
+        </button>
+      </div>
+
+      <!-- 4 Statistics Cards -->
+      <div class="grid-container grid-4">
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-blue">
+            <i class="fa-solid fa-wave-square"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Event Throughput</span>
+            <span class="stat-value" id="stat-throughput">14,280</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> +12.4% / sec</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-cyan">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Active Sensors</span>
+            <span class="stat-value" id="stat-active-sensors">48 / 50</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-check"></i> 96% Operational</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-emerald">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Avg Processing Latency</span>
+            <span class="stat-value" id="stat-latency">4.2 ms</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-bolt"></i> Optimal</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-purple">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">System Health</span>
+            <span class="stat-value" id="stat-health">99.9%</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-heart-pulse"></i> Healthy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temperature Cards -->
+      <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+        <i class="fa-solid fa-temperature-high" style="color: var(--accent-cyan); margin-right: 8px;"></i>
+        Key Sensor Temperature Telemetry
+      </h2>
+      <div class="grid-container grid-3" id="temperature-cards-container">
+        <!-- Dynamically populated temperature cards -->
+      </div>
+
+      <!-- Chart Visualizers -->
+      <div class="grid-container grid-2">
+        <div class="card">
+          <div class="flex-between" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 1rem; font-weight: 600;">Event Throughput Rate (events/sec)</h3>
+            <span class="badge badge-info">Realtime Stream</span>
+          </div>
+          <div style="height: 280px; position: relative;">
+            <canvas id="throughputChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex-between" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 1rem; font-weight: 600;">Sensor Temperature Profile (°C)</h3>
+            <span class="badge badge-success">Live Heatmap</span>
+          </div>
+          <div style="height: 280px; position: relative;">
+            <canvas id="temperatureChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 2: SENSOR DATA PAGE
+         ---------------------------------------------------------------------- -->
+    <section id="sensors-view" class="view-section hidden">
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">Sensor Fleet Management</h1>
+          <p class="page-subtitle">Inspect Python worker streams & temperature readings</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="sensor-search-input" class="form-control" placeholder="Search sensor ID..." style="width: 240px;">
+          <select id="sensor-status-filter" class="form-control" style="width: 160px;">
+            <option value="ALL">All Statuses</option>
+            <option value="ONLINE">Online</option>
+            <option value="WARNING">Warning</option>
+            <option value="OFFLINE">Offline</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card table-container">
+        <table class="custom-table" id="sensors-table">
+          <thead>
+            <tr>
+              <th>Sensor ID</th>
+              <th>Location / Zone</th>
+              <th>Status</th>
+              <th>Temperature (°C)</th>
+              <th>Pressure (PSI)</th>
+              <th>Battery (%)</th>
+              <th>Last Ping</th>
+            </tr>
+          </thead>
+          <tbody id="sensors-table-body">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 3: ALERTS PAGE
+         ---------------------------------------------------------------------- -->
+    <section id="alerts-view" class="view-section hidden">
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">System Alerts & Anomalies</h1>
+          <p class="page-subtitle">Real-time threshold triggers & worker notifications</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary alert-filter-btn active" data-filter="ALL">All Alerts</button>
+          <button class="btn btn-secondary alert-filter-btn" data-filter="CRITICAL">Critical</button>
+          <button class="btn btn-secondary alert-filter-btn" data-filter="WARNING">Warning</button>
+        </div>
+      </div>
+
+      <div class="card table-container">
+        <table class="custom-table" id="alerts-table">
+          <thead>
+            <tr>
+              <th>Alert ID</th>
+              <th>Severity</th>
+              <th>Source Sensor</th>
+              <th>Message</th>
+              <th>Trigger Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-table-body">
+            <!-- Dynamically populated alert rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Application Logic Modules -->
+  <script src="js/api.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/sensors.js"></script>
+  <script src="js/alerts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
