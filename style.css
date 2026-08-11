@@ -1,0 +1,148 @@
+/* ==========================================================================
+   STREAMFORGE FRONTEND - BASE DESIGN TOKENS & STYLES (css/style.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (VARIABLES)
+   These variables define our design system color palette, spacing, fonts,
+   and visual effects (shadows, transitions) in one central location.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Dark Theme Color Palette */
+  --bg-dark-900: #0a0e17;        /* Main page background (Deep obsidian) */
+  --bg-dark-800: #111827;        /* Primary card & sidebar background */
+  --bg-dark-700: #1f293d;        /* Hover state & secondary card background */
+  --bg-dark-600: #2d3748;        /* Border color & input backgrounds */
+
+  /* Text Colors */
+  --text-primary: #f3f4f6;      /* Primary high-contrast text (Off-white) */
+  --text-secondary: #9ca3af;    /* Muted text for labels & subtitles */
+  --text-dim: #6b7280;          /* Disabled or secondary hint text */
+
+  /* Accent & Status Colors */
+  --accent-blue: #3b82f6;       /* Primary interactive elements (Buttons, Links) */
+  --accent-blue-hover: #2563eb; /* Hover state for primary buttons */
+  --accent-cyan: #06b6d4;       /* Secondary metrics highlight (Chart lines) */
+  --accent-purple: #8b5cf6;     /* Gradient accent */
+
+  /* Status Indicators */
+  --status-success: #10b981;    /* Emerald green for Online/Success states */
+  --status-success-bg: rgba(16, 185, 129, 0.15);
+  --status-warning: #f59e0b;    /* Amber for Warning states */
+  --status-warning-bg: rgba(245, 158, 11, 0.15);
+  --status-danger: #ef4444;     /* Crimson red for Errors/Critical alerts */
+  --status-danger-bg: rgba(239, 68, 68, 0.15);
+  --status-info: #3b82f6;       /* Blue for Information notifications */
+  --status-info-bg: rgba(59, 130, 246, 0.15);
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Layout Dimensions */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 70px;
+  --navbar-height: 65px;
+
+  /* Shadows & Glassmorphism */
+  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --glow-accent: 0 0 15px rgba(59, 130, 246, 0.3);
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-color: rgba(255, 255, 255, 0.08);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE STYLES
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box; /* Ensures padding & borders don't exceed set dimensions */
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-family);
+  background-color: var(--bg-dark-900);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow-x: hidden; /* Prevents unwanted horizontal scrollbars */
+  -webkit-font-smoothing: antialiased; /* Crisp text rendering on mac/Webkit */
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-dark-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* --------------------------------------------------------------------------
+   3. UTILITY & HELPER CLASSES
+   -------------------------------------------------------------------------- */
+.hidden {
+  display: none !important; /* Hides elements from DOM visual layout */
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: var(--status-success-bg);
+  color: var(--status-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-warning {
+  background-color: var(--status-warning-bg);
+  color: var(--status-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-danger {
+  background-color: var(--status-danger-bg);
+  color: var(--status-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-info {
+  background-color: var(--status-info-bg);
+  color: var(--status-info);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
