@@ -9,7 +9,7 @@ Welcome to **StreamForge**! StreamForge is a modern web application and backend 
 2. [Technologies Explained Simply](#-technologies-explained-simply)
 3. [Key Features](#-key-features)
 4. [Folder Structure](#-folder-structure)
-5. [Quick Start Guide (Run in 2 Minutes)](#-quick-start-guide-run-in-2-minutes)
+5. [Quick Start Guide](#-quick-start-guide)
 6. [API Endpoints Cheat Sheet](#-api-endpoints-cheat-sheet)
 7. [Testing & Database Commands](#-testing--database-commands)
 
@@ -73,7 +73,7 @@ StreamForge/
 
 ---
 
-## 🚀 Quick Start Guide (Run in 2 Minutes)
+## 🚀 Quick Start Guide
 
 Follow these simple steps to run the complete platform on your computer:
 
@@ -97,11 +97,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # 4. Start the FastAPI server
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn app.main:app --reload
 ```
 
-- **Swagger API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Health Check Endpoint:** [http://localhost:8000/health](http://localhost:8000/health)
+- **Swagger API Documentation:** Access `/docs` path in your browser
+- **Health Check Endpoint:** Access `/health` path
 
 ---
 
@@ -112,11 +112,11 @@ Open a **second terminal window** and run:
 ```bash
 cd frontend-dashboard
 
-# Start local web server on port 8080
-python -m http.server 8080
+# Start web server
+python -m http.server
 ```
 
-Now open **[http://localhost:8080](http://localhost:8080)** in your browser!
+Open the web server URL in your browser.
 
 #### 🔑 Demo Login Credentials:
 - **Username / Email:** `admin` (or `admin@streamforge.com`)
