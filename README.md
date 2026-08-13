@@ -1,210 +1,153 @@
-<div align="center">
+# StreamForge 🚀 — Distributed Event Processing & Live Telemetry Platform
 
-# 🚀 StreamForge
-
-### **Distributed Python Event Processing & Real-Time Telemetry Platform**
-
-*A production-grade microservices architecture combining FastAPI, Apache Kafka, PostgreSQL / SQLAlchemy 2.0 ORM, Alembic, and a sleek Glassmorphism Single-Page Dashboard.*
-
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Kafka](https://img.shields.io/badge/Apache_Kafka-Event_Streaming-231F20.svg?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.0%2B-4169E1.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![License](https://img.shields.io/badge/License-Axlero_Internship-orange.svg)]()
+Welcome to **StreamForge**! StreamForge is a modern web application and backend system for real-time live streaming metrics and IoT sensor event processing.
 
 ---
 
-</div>
-
-## 📖 Overview
-
-**StreamForge** is an end-to-end distributed event processing and live streaming telemetry platform. Built for modern cloud-native environments, it ingests high-frequency IoT sensor measurements, tracks streaming video encoding quality (`1080p60 @ 6000 kbps`), monitors viewer chat velocity, and triggers real-time threshold alert incidents.
-
-Whether monitoring distributed server clusters or live streamer engagement, StreamForge provides an interactive dashboard with dynamic data visualizations, live simulation triggers, and JWT role-based security.
-
----
-
-## ✨ Core Features
-
-### 🎥 1. Live Streaming & Video Encoding Telemetry
-- **Video Stream Health Monitoring:** Tracks active channel encoding bitrates (`kbps`), frame rate (`FPS`), dropped frame percentages, and stream resolution (`1080p60`).
-- **Viewer Engagement & Chat Velocity:** Aggregates peak concurrent viewers, chat message frequency (`msgs/min`), and live tip donation revenues.
-- **Interactive Broadcast Simulation:** Live simulation engine (`POST /api/v1/streams/simulate`) allowing reviewers to trigger synthetic viewer bursts and bitrate drops on command.
-
-### 📟 2. IoT Telemetry & Kafka Stream Processing
-- **Event Streaming Pipeline:** Ingests high-throughput sensor telemetry payloads directly into **Apache Kafka** topics.
-- **Automated Incident Triggers:** Real-time evaluation of warning (`>75°C`) and critical (`>90°C`) sensor threshold breaches with automated alert status tracking (`OPEN`, `ACKNOWLEDGED`, `RESOLVED`).
-
-### 🔐 3. Security & Access Control
-- **JWT Authentication:** OAuth2 password flow with JSON Web Tokens (JWT) and PBKDF2 / Bcrypt password hashing.
-- **Role-Based Authorization:** Scoped endpoints for `ADMIN`, `OPERATOR`, and `VIEWER` roles.
-
-### 🎨 4. High-Performance Dashboard UI
-- **Modern Glassmorphism Design System:** Custom dark mode layout built with CSS HSL color tokens, micro-animations, and responsive grids.
-- **Real-Time Data Visualizations:** Integrated **Chart.js** line graphs, bar heatmaps, and encoding performance charts.
-
-### 🗄️ 5. Modular Database Architecture
-- **SQLAlchemy 2.0 Async ORM:** Clean type-annotated domain models (`User`, `Channel`, `Stream`, `Sensor`, `Alert`, `ChatMessage`, `Donation`).
-- **Alembic Database Versioning:** Structured migration history supporting both PostgreSQL and zero-config SQLite environments.
+## 📌 Table of Contents
+1. [What is StreamForge?](#-what-is-streamforge)
+2. [Technologies Explained Simply](#-technologies-explained-simply)
+3. [Key Features](#-key-features)
+4. [Folder Structure](#-folder-structure)
+5. [Quick Start Guide (Run in 2 Minutes)](#-quick-start-guide-run-in-2-minutes)
+6. [API Endpoints Cheat Sheet](#-api-endpoints-cheat-sheet)
+7. [Testing & Database Commands](#-testing--database-commands)
 
 ---
 
-## 🏗️ Architecture & Data Flow
+## 💡 What is StreamForge?
 
-```mermaid
-flowchart TD
-    subgraph Clients["💻 Client Applications"]
-        UI["Frontend Dashboard (SPA)"]
-        AuthUI["Frontend Auth Interface"]
-        Sensors["IoT Sensor Nodes / Simulation Client"]
-    end
-
-    subgraph Gateway["⚡ FastAPI Microservice (backend-api)"]
-        Router["API Router (v1)"]
-        AuthModule["JWT Security & Auth"]
-        StreamSvc["Stream Telemetry Service"]
-        SensorSvc["Sensor & Alert Service"]
-    end
-
-    subgraph Messaging["📩 Message Broker"]
-        Kafka["Apache Kafka Event Bus"]
-    end
-
-    subgraph Storage["🗄️ Persistence Layer"]
-        DB[(PostgreSQL / SQLite)]
-        ORM["SQLAlchemy 2.0 ORM"]
-        Alembic["Alembic Migrations"]
-    end
-
-    UI -->|HTTP / JSON| Router
-    AuthUI -->|Login Requests| AuthModule
-    Sensors -->|Ingest Telemetry| Router
-    Router --> SensorSvc
-    Router --> StreamSvc
-    SensorSvc -->|Publish Events| Kafka
-    SensorSvc --> ORM
-    StreamSvc --> ORM
-    ORM --> DB
-```
+**StreamForge** combines two real-time systems into one unified platform:
+1. **Live Video Streaming Analytics:** Tracks video stream encoding quality (Bitrate, 1080p60 FPS, dropped frame %), live viewers, chat messages/min, and tip donations.
+2. **IoT Sensor Monitoring:** Receives temperature and hardware sensor readings, detects spikes above safety limits (>75°C warning, >90°C critical), and raises alerts automatically.
 
 ---
 
-## 📁 Repository Structure
+## 🧠 Technologies Explained Simply
+
+| Technology | What it is | Why we use it in StreamForge |
+| :--- | :--- | :--- |
+| **FastAPI** | High-speed Python Web Framework | Serves API endpoints fast with automatic Swagger documentation. |
+| **Apache Kafka** | Distributed Streaming Message Queue | Ingests thousands of sensor events/sec without slowing down the server. |
+| **PostgreSQL / SQLite** | Relational Database Engine | Stores persistent records for Users, Channels, Sensors, Alerts, and Streams. |
+| **SQLAlchemy 2.0** | Python ORM (Object Relational Mapper) | Lets us write database queries using clean Python code instead of raw SQL strings. |
+| **Alembic** | Database Migration Manager | Keeps track of database schema changes over time (like Git for database structure). |
+| **Chart.js & HTML5** | Frontend Dashboard UI | Displays live interactive graphs, dark-mode glassmorphic cards, and real-time counters. |
+
+---
+
+## ✨ Key Features
+
+- **🎥 Live Stream Telemetry Dashboard:** Displays active channels (AliceCodes, BobTheGamer, DevTalksLive) with real-time viewer count, stream resolution (`1080p60`), bitrate (`6000 kbps`), dropped frame %, and chat rates.
+- **⚡ Interactive Simulator:** Click **"Simulate Viewer Spike"** on the dashboard (or send a POST request) to instantly test live traffic bursts and chart updates.
+- **📟 IoT Hardware Monitoring:** Monitors server temperatures and automatically triggers open warning/critical alert tickets when thresholds are breached.
+- **🔐 User Auth & Security:** Supports user sign-in using secure JSON Web Tokens (JWT) and encrypted passwords.
+- **📊 Real-Time Charts:** Live Chart.js visualizations for throughput, sensor temperatures, encoding bitrate, and chat velocity.
+
+---
+
+## 📂 Folder Structure
+
+The repository is organized into simple modular folders:
 
 ```text
-axlero-intern-project-StreamForge/
-├── backend-api/           # FastAPI backend microservice
-│   ├── app/
-│   │   ├── api/v1/        # Endpoints: auth, users, sensors, alerts, dashboard, streams
-│   │   ├── core/          # Security, JWT tokens, exception handlers, logging
-│   │   ├── db/            # Async SQLAlchemy engine & session lifecycle
-│   │   ├── kafka/         # Kafka Producer & Consumer handlers
-│   │   ├── models/        # ORM entities (User, Sensor, Alert, LiveStream)
-│   │   ├── schemas/       # Pydantic data validation schemas
-│   │   └── services/      # Business logic, analytics calculations & simulations
-│   └── main.py            # FastAPI application entry point & DB seeders
+StreamForge/
+├── backend-api/           # Python FastAPI Web Backend
+│   ├── app/api/v1/        # API Routes (auth, sensors, alerts, streams)
+│   ├── app/models/        # Database Tables (User, Sensor, Alert, LiveStream)
+│   ├── app/services/      # Business logic & simulation functions
+│   └── app/main.py        # Backend server entry point
 │
-├── frontend-dashboard/     # Real-time telemetry dashboard SPA
-│   ├── css/               # Glassmorphism design system & component styles
-│   ├── js/                # API client, Chart.js controller, streams manager, app router
-│   └── index.html         # Main dashboard HTML shell
+├── frontend-dashboard/     # Real-Time Telemetry Dashboard UI
+│   ├── index.html         # Main Single Page Application (SPA)
+│   └── js/                # Dashboard logic, API connection, & Chart.js scripts
 │
-├── frontend-auth/          # User authentication UI
+├── frontend-auth/          # User Login Interface
 │
-├── query-core/             # Database ORM models, CRUD logic & test suite
-│   ├── src/               # Models, CRUD queries, configuration, seed script
-│   └── verify_db.py       # SQLite in-memory verification test suite
+├── query-core/             # Database ORM models & verification test suite
+│   ├── src/models.py      # Core database schemas
+│   └── verify_db.py       # Run this script to test database logic locally
 │
-└── query-migrations/       # Alembic migration management
-    └── migrations/        # Schema migration version control scripts
+└── query-migrations/       # Alembic Migration Files
 ```
 
 ---
 
-## 🚀 Quick Start & Local Setup
+## 🚀 Quick Start Guide (Run in 2 Minutes)
 
-### 1. Prerequisites
-- **Python 3.10+**
-- **Git**
+Follow these simple steps to run the complete platform on your computer:
 
-### 2. Clone the Repository
-```bash
-git clone https://github.com/Sricharangoud/axlero-intern-project-StreamForge.git
-cd axlero-intern-project-StreamForge
-```
+### Step 1: Start the Backend API (FastAPI)
 
----
-
-### 3. Launch Backend API Service (`backend-api`)
+Open your terminal and run:
 
 ```bash
 cd backend-api
 
-# Create & activate Python virtual environment
+# 1. Create a virtual environment (optional but recommended)
 python -m venv .venv
 
+# 2. Activate virtual environment
 # Windows PowerShell:
 .venv\Scripts\Activate.ps1
-# macOS/Linux:
+# macOS / Linux:
 source .venv/bin/activate
 
-# Install dependencies
+# 3. Install required packages
 pip install -r requirements.txt
 
-# Start FastAPI server on port 8000
+# 4. Start the FastAPI server
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-- 🌐 **Interactive OpenAPI Docs (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
-- 📖 **ReDoc Specification:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- ❤️ **Health Status:** [http://localhost:8000/health](http://localhost:8000/health)
+- **Swagger API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Health Check Endpoint:** [http://localhost:8000/health](http://localhost:8000/health)
 
 ---
 
-### 4. Launch Frontend Dashboard (`frontend-dashboard`)
+### Step 2: Start the Frontend Dashboard
 
-Open a new terminal window:
+Open a **second terminal window** and run:
+
 ```bash
 cd frontend-dashboard
 
-# Start local HTTP server on port 8080
+# Start local web server on port 8080
 python -m http.server 8080
 ```
 
-Open **[http://localhost:8080](http://localhost:8080)** in your browser.
+Now open **[http://localhost:8080](http://localhost:8080)** in your browser!
 
-#### Demo Credentials:
-- **Username / Email:** `admin@streamforge.com` (or `admin`)
+#### 🔑 Demo Login Credentials:
+- **Username / Email:** `admin` (or `admin@streamforge.com`)
 - **Password:** `Admin@12345` (or `password123`)
 
 ---
 
-## 📡 API Reference Summary
+## 🔌 API Endpoints Cheat Sheet
 
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `GET` | `/health` | Service health check | ❌ |
-| `POST` | `/api/v1/auth/login` | Authenticate user & obtain JWT Token | ❌ |
-| `GET` | `/api/v1/users/me` | Fetch current logged-in user profile | `Bearer JWT` |
-| `GET` | `/api/v1/sensors/` | List all registered sensor nodes | `Bearer JWT` |
-| `POST` | `/api/v1/sensors/ingest` | Ingest sensor telemetry event into Kafka | `Bearer JWT` |
-| `GET` | `/api/v1/alerts/` | Retrieve active threshold alerts & incidents | `Bearer JWT` |
-| `POST` | `/api/v1/alerts/{id}/acknowledge` | Acknowledge open incident alert | `Bearer JWT` |
-| `GET` | `/api/v1/streams/live` | Retrieve live channels & encoding metrics | `Bearer JWT` |
-| `GET` | `/api/v1/streams/analytics` | Compute platform aggregate stream analytics | `Bearer JWT` |
-| `POST` | `/api/v1/streams/simulate` | Interactively simulate viewer spikes & bursts | `Bearer JWT` |
+| HTTP Method | API Endpoint | What it does |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Check if backend service is running |
+| `POST` | `/api/v1/auth/login` | Sign in & receive access token |
+| `GET` | `/api/v1/sensors/` | View list of all active server sensors |
+| `POST` | `/api/v1/sensors/ingest` | Send new temperature reading |
+| `GET` | `/api/v1/alerts/` | View open alerts and critical incidents |
+| `GET` | `/api/v1/streams/live` | View live channels & video quality metrics |
+| `GET` | `/api/v1/streams/analytics` | View total peak viewers & stream statistics |
+| `POST` | `/api/v1/streams/simulate` | Trigger viewer spike / traffic burst simulation |
 
 ---
 
-## 🧪 Database Verification & Migrations
+## 🧪 Testing & Database Commands
 
-### Run Verification Test Suite (`query-core`)
+### Test Database Logic Locally (`query-core`)
 ```bash
 cd query-core
 python verify_db.py
 ```
 
-### Apply Database Schema Migrations (`query-migrations`)
+### Apply Database Migrations (`query-migrations`)
 ```bash
 cd query-migrations
 alembic upgrade head
@@ -212,5 +155,5 @@ alembic upgrade head
 
 ---
 
-## 📄 License
-Maintained as part of the Axlero Internship project.
+## 📝 License
+Maintained as part of the **Axlero Internship Project**.
