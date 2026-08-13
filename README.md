@@ -1,155 +1,147 @@
-# StreamForge Database Project 🚀
+# StreamForge 🚀 — Distributed Event Processing & Live Telemetry Platform
 
-Welcome to the **StreamForge** database design project! This project is designed to show you how to design a modern, relational database using **PostgreSQL**, map it to Python code using **SQLAlchemy 2.0 ORM**, manage migrations with **Alembic**, and write clean **CRUD (Create, Read, Update, Delete)** operations.
-
----
-
-## Table of Contents
-1. [Core Concepts Explained for Beginners](#1-core-concepts-explained-for-beginners)
-2. [Project Architecture & Schema](#2-project-architecture--schema)
-3. [Folder Structure](#3-folder-structure)
-4. [Local Setup Guide](#4-local-setup-guide)
-5. [Running Verification and Seeding](#5-running-verification-and-seeding)
-6. [Managing Database Migrations with Alembic](#6-managing-database-migrations-with-alembic)
+Welcome to **StreamForge** — an enterprise-ready, high-performance distributed event processor and live streaming telemetry platform built with **Python 3.10+**, **FastAPI**, **Apache Kafka**, **PostgreSQL / SQLAlchemy 2.0 ORM**, **Alembic**, and a modern **Glassmorphism Single Page Interface (SPA)**.
 
 ---
 
-## 1. Core Concepts Explained for Beginners
+## 🌟 Key Features
 
-### Relational Database (RDBMS) & PostgreSQL
-A **relational database** stores data in tables (like Excel spreadsheets) with rows (records) and columns (attributes). Tables are linked together using **relationships** (foreign keys). 
-* **PostgreSQL** is an enterprise-grade, highly reliable open-source relational database.
-* In this project, we also support **SQLite** (a lightweight file-based database) out of the box so you can run the code instantly without installing PostgreSQL.
-
-### Object Relational Mapping (ORM) & SQLAlchemy
-In Python, writing raw SQL queries (`SELECT * FROM users WHERE...`) can be error-prone and hard to maintain. An **ORM** acts as a bridge:
-* It maps database **tables** to Python **classes** (models).
-* It maps table **rows** to Python **objects**.
-* **SQLAlchemy** is the leading Python ORM. We use the modern **SQLAlchemy 2.0** syntax, which provides static type safety (`Mapped` and `mapped_column`) and clean query building.
-
-### Database Migrations & Alembic
-As your application grows, your database schema changes (e.g., adding a new column to a table). If you run `CREATE TABLE` again, you will lose existing data.
-* **Database migrations** track changes to your database schema over time, like Git commits for database structure.
-* **Alembic** is the migration tool for SQLAlchemy. It compares your models in Python with the database and automatically writes script files to upgrade or downgrade your database.
+- **⚡ Live Streaming & Video Telemetry Dashboard:** Real-time video encoding metrics (`1080p60 @ 6000 kbps`), dropped frame rates, peak concurrent viewers, chat message velocity (msgs/min), and total tip donations.
+- **🎮 Interactive Simulation Engine:** Simulate live viewer spikes, bitrate drops, chat bursts, or tip donations via interactive dashboard buttons and API triggers (`POST /api/v1/streams/simulate`).
+- **📟 IoT Telemetry & Kafka Stream Ingestion:** Ingest high-volume sensor event streams via Kafka producer/consumer pipelines with automated threshold triggers and incident alerting.
+- **🔐 JWT Security & Auth System:** Production-ready JSON Web Token (JWT) authorization, password hashing (PBKDF2/Bcrypt), and role-based access control (Admin, Operator, Viewer).
+- **📊 Interactive Data Visualizations:** Real-time throughput line charts, thermal heatmaps, encoding bitrate distributions, and chat velocity curves powered by Chart.js.
+- **🗄️ Database ORM & Migrations:** Modular SQLAlchemy 2.0 async ORM design (`query-core`), schema migrations with Alembic (`query-migrations`), and automated DB seeding scripts.
 
 ---
 
-## 2. Project Architecture & Schema
-
-StreamForge models the entities of a modern live-streaming platform:
-
-* **Users**: Registered accounts.
-* **Channels**: Streaming rooms owned by Users (**1:1 relationship**).
-* **Categories**: Streaming games/topics (e.g. "Software Development", "Just Chatting").
-* **Streams**: Active or past live broadcast sessions.
-* **Follows**: Many-to-Many junction linking Users who follow Channels.
-* **Subscriptions**: Premium backing ($) tier status linking Users and Channels.
-* **Chat Messages**: Messages sent by viewers during a live broadcast.
-* **Donations**: Monetary tips sent by viewers to streamers.
-
-Refer to the visual layout of relationships in the project's design phase.
-
----
-
-## 3. Folder Structure
+## 📁 Repository Structure
 
 ```text
-streamforge_db/
-├── .env.example          # Template for database credentials
-├── .env                  # Local file containing actual passwords (never commit this)
-├── requirements.txt      # Python dependencies (SQLAlchemy, Alembic, psycopg2-binary, etc.)
-├── verify_db.py          # Script to run unit-style verification tests (using in-memory SQLite)
-├── alembic.ini           # Configuration file for Alembic
-├── src/
-│   ├── __init__.py       # Makes src a Python package
-│   ├── config.py         # Config loader (.env -> Python variables)
-│   ├── database.py       # SQLAlchemy engine and sessionmaker initialization
-│   ├── models.py         # Database ORM models (tables, columns, relationships)
-│   ├── crud.py           # Standard reusable Database query operations (Create/Read/Update/Delete)
-│   └── seed.py           # Script to populate the database with realistic sample data
-└── migrations/           # Alembic folder holding migration scripts and settings
-    ├── env.py            # Tells Alembic how to connect to DB and where models are
-    ├── script.py.mako    # Template file for generating migration scripts
-    └── versions/         # Holds auto-generated migration history files
+axlero-intern-project-StreamForge/
+├── backend-api/           # FastAPI backend microservice (APIs, Auth, Sensors, Streams, Kafka Producer/Consumer)
+│   ├── app/
+│   │   ├── api/v1/        # Endpoints: auth, users, sensors, alerts, dashboard, streams
+│   │   ├── core/          # Security, JWT auth, exception handlers, logging
+│   │   ├── db/            # Async SQLAlchemy engine & session manager
+│   │   ├── kafka/         # Kafka Producer & Consumer handlers
+│   │   ├── models/        # ORM Models (User, Sensor, Alert, LiveStream)
+│   │   ├── schemas/       # Pydantic validation schemas
+│   │   └── services/      # Service business logic & simulation routines
+│   └── main.py            # FastAPI entry point & startup db seeders
+│
+├── frontend-dashboard/     # Glassmorphic telemetry & streaming dashboard UI
+│   ├── css/               # Modular CSS tokens, dark mode glassmorphism system
+│   ├── js/                # API client, Chart.js controller, streams manager, router
+│   └── index.html         # Main dashboard Single Page Application (SPA)
+│
+├── frontend-auth/          # Frontend authentication user interface
+│
+├── query-core/             # Database ORM models (SQLAlchemy 2.0), schemas, CRUD, & seeders
+│   ├── src/               # Models, CRUD operations, configuration, seed script
+│   └── verify_db.py       # Automated in-memory SQLite database verification suite
+│
+└── query-migrations/       # Database migration tracking and version management with Alembic
+    └── migrations/        # Alembic schema version history
 ```
 
 ---
 
-## 4. Local Setup Guide
+## 🛠️ Tech Stack
 
-### Step 1: Create a Virtual Environment
-A virtual environment isolates your python dependencies.
+- **Backend Framework:** Python 3.10+, FastAPI, Uvicorn, Pydantic v2
+- **Messaging & Event Streaming:** Apache Kafka (Producer/Consumer)
+- **Database & ORM:** PostgreSQL / SQLite, SQLAlchemy 2.0 (Async), Alembic Migrations
+- **Frontend Architecture:** HTML5, Modern Vanilla JavaScript (ES6+), Chart.js, FontAwesome
+- **Styling System:** Custom Vanilla CSS Design System with Dark Glassmorphism, HSL Color Palettes, & Micro-animations
+
+---
+
+## 🚀 Quick Start & Local Setup
+
+### 1. Prerequisites
+- Python 3.10+
+- Git
+
+### 2. Clone the Repository
 ```bash
-# Create the environment
-py -m venv .venv
-
-# Activate it (Windows PowerShell)
-.venv\Scripts\Activate.ps1
-
-# Activate it (Windows Command Prompt)
-.venv\Scripts\activate.bat
-
-# Activate it (macOS/Linux)
-source .venv/bin/activate
+git clone https://github.com/Sricharangoud/axlero-intern-project-StreamForge.git
+cd axlero-intern-project-StreamForge
 ```
 
-### Step 2: Install Dependencies
+---
+
+### 3. Run the Backend API (`backend-api`)
+
 ```bash
+cd backend-api
+
+# Create and activate virtual environment
+python -m venv .venv
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+
+# Install requirements
 pip install -r requirements.txt
+
+# Start FastAPI Uvicorn Server
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-### Step 3: Setup Configuration Environment
-Copy `.env.example` to `.env`:
-```bash
-copy .env.example .env
-```
-*If you don't have PostgreSQL set up, the code will automatically fall back to using a local SQLite file (`streamforge.db`) so you can explore immediately!*
+- **Swagger Interactive API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **ReDoc Documentation:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
+- **Service Health Endpoint:** [http://localhost:8000/health](http://localhost:8000/health)
 
 ---
 
-## 5. Running Verification and Seeding
+### 4. Run the Frontend Dashboard (`frontend-dashboard`)
 
-### Verify Schema & CRUD Operations (SQLite In-Memory)
-We created a test suite that runs database schema generation and all CRUD functions in-memory. Run it with:
+Open a new terminal window:
 ```bash
+cd frontend-dashboard
+
+# Start local HTTP web server
+python -m http.server 8080
+```
+
+Open **[http://localhost:8080](http://localhost:8080)** in your web browser.
+
+#### Demo Login Credentials:
+- **Username / Email:** `admin@streamforge.com` (or `admin`)
+- **Password:** `Admin@12345` (or `password123`)
+
+---
+
+## 📡 API Endpoints Overview
+
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/health` | `GET` | System health check & service status |
+| `/api/v1/auth/login` | `POST` | Authenticate user & obtain JWT Bearer Token |
+| `/api/v1/sensors/` | `GET` / `POST` | List registered sensor nodes / Register new sensor |
+| `/api/v1/sensors/ingest` | `POST` | Ingest real-time sensor measurement into Kafka stream |
+| `/api/v1/alerts/` | `GET` | Retrieve active system alerts & threshold triggers |
+| `/api/v1/streams/live` | `GET` | List active live broadcast channels & video quality metrics |
+| `/api/v1/streams/analytics` | `GET` | Platform-wide video stream telemetry, peak viewers & chat velocity |
+| `/api/v1/streams/simulate` | `POST` | Interactively simulate live viewer spikes & traffic bursts |
+
+---
+
+## 🧪 Database Verification & Migrations
+
+### Run `query-core` Verification Suite
+```bash
+cd query-core
 python verify_db.py
 ```
-If successful, you will see a detailed checklist of passed assertions showing correct 1:1, M:N, and cascading behavior!
 
-### Seed Sample Data
-Populate your local database with mock channels, live streams, chat messages, and subscription tiers:
+### Apply Database Migrations with Alembic
 ```bash
-python -m src.seed
-```
-This will create a `streamforge.db` SQLite file locally (if you haven't configured a PostgreSQL server in `.env`) containing complete populated tables.
-
----
-
-## 6. Managing Database Migrations with Alembic
-
-If you connect to a PostgreSQL database, you will use **Alembic** to create tables and manage updates.
-
-### Initialize Migrations (Done automatically or manually)
-To initialize the migration directory (already configured in this project):
-```bash
-alembic init migrations
-```
-
-### Generate a Migration (Auto-detect model changes)
-When you modify models in `src/models.py`, generate a new migration file:
-```bash
-alembic revision --autogenerate -m "Initial schema setup"
-```
-This generates a python file under `migrations/versions/` describing changes.
-
-### Apply Migrations (Build/Update Database)
-To apply pending migrations and build tables in PostgreSQL:
-```bash
+cd query-migrations
 alembic upgrade head
 ```
 
-### Rollback a Migration
-If something went wrong, you can undo the last migration:
-```bash
-alembic downgrade -1
-```
+---
+
+## 📄 License
+Maintained as part of the Axlero Internship project.
