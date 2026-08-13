@@ -120,6 +120,12 @@
           <span class="nav-text">Alerts & Incidents</span>
         </a>
       </li>
+      <li class="nav-item" data-view="streams">
+        <a href="#streams">
+          <i class="fa-solid fa-video nav-icon"></i>
+          <span class="nav-text">Live Streams</span>
+        </a>
+      </li>
     </ul>
 
     <div class="sidebar-footer">
@@ -303,6 +309,105 @@
       </div>
     </section>
 
+    <!-- ----------------------------------------------------------------------
+         VIEW 4: LIVE STREAMS & VIDEO TELEMETRY PAGE
+         ---------------------------------------------------------------------- -->
+    <section id="streams-view" class="view-section hidden">
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">Live Streamer & Video Telemetry</h1>
+          <p class="page-subtitle">Real-time broadcast bitrate, viewer peak, chat velocity & video encoding stream health</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button id="simulate-spike-btn" class="btn btn-primary">
+            <i class="fa-solid fa-bolt"></i> Simulate Viewer Spike
+          </button>
+          <button id="refresh-streams-btn" class="btn btn-secondary">
+            <i class="fa-solid fa-rotate"></i> Refresh Telemetry
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Live Stream Stats Cards -->
+      <div class="grid-container grid-4">
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-purple">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Active Channels</span>
+            <span class="stat-value" id="stat-stream-count">4</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-broadcast-tower"></i> Broadcasting</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-blue">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Peak Concurrent Viewers</span>
+            <span class="stat-value" id="stat-stream-viewers">6,175</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> Live Engagement</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-cyan">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Avg Video Bitrate</span>
+            <span class="stat-value" id="stat-stream-bitrate">6,092 kbps</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-check"></i> 1080p60 Ultra HD</span>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-icon-wrapper stat-icon-emerald">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Chat Velocity / Rev</span>
+            <span class="stat-value" id="stat-stream-chat">682 msg/m</span>
+            <span class="stat-trend trend-up"><i class="fa-solid fa-dollar-sign"></i> <span id="stat-stream-donations">$1,865</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Channels Broadcast Grid -->
+      <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+        <i class="fa-solid fa-video" style="color: var(--accent-purple); margin-right: 8px;"></i>
+        Active Channel Broadcast Cards
+      </h2>
+      <div class="grid-container grid-2" id="live-streams-grid">
+        <!-- Dynamically rendered stream broadcast cards -->
+      </div>
+
+      <!-- Video Telemetry Charts -->
+      <div class="grid-container grid-2" style="margin-top: 1.5rem;">
+        <div class="card">
+          <div class="flex-between" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 1rem; font-weight: 600;">Stream Encoding Bitrate (kbps)</h3>
+            <span class="badge badge-info">Observed Telemetry</span>
+          </div>
+          <div style="height: 280px; position: relative;">
+            <canvas id="streamBitrateChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex-between" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 1rem; font-weight: 600;">Viewer Peak & Chat Message Rate</h3>
+            <span class="badge badge-success">Live Engagement</span>
+          </div>
+          <div style="height: 280px; position: relative;">
+            <canvas id="streamChatChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Application Logic Modules -->
@@ -313,6 +418,7 @@
   <script src="js/dashboard.js"></script>
   <script src="js/sensors.js"></script>
   <script src="js/alerts.js"></script>
+  <script src="js/streams.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

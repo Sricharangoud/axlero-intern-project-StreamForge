@@ -115,6 +115,11 @@ class Application {
       window.sensorsController.loadSensors();
     } else if (viewName === 'alerts') {
       window.alertsController.loadAlerts();
+    } else if (viewName === 'streams') {
+      if (window.streamsManager) {
+        window.streamsManager.init();
+        window.streamsManager.loadStreamTelemetry();
+      }
     }
   }
 

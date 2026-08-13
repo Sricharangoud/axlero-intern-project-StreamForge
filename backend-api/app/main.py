@@ -71,6 +71,13 @@ async def create_tables_and_seed_admin():
             await session.commit()
             logger.info("Initial IoT sensors & sample alerts seeded successfully.")
 
+        # Seed Initial Live Streams if none exist
+        from app.services.stream_service import StreamService
+        seeded_streams = await StreamService.seed_default_streams(session)
+        if seeded_streams:
+            logger.info(f"Seeded {len(seeded_streams)} default live stream channels.")
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

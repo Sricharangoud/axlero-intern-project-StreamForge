@@ -69,6 +69,9 @@ class ApiClient {
       if (targetEndpoint === '/dashboard/summary' || targetEndpoint === '/stats/summary') return this.getMockDashboardData();
       if (targetEndpoint === '/sensors' || targetEndpoint === '/sensors/') return this.getMockSensorsList();
       if (targetEndpoint === '/alerts' || targetEndpoint === '/alerts/') return this.getMockAlertsList();
+      if (targetEndpoint === '/streams/analytics') return this.getMockStreamAnalytics();
+      if (targetEndpoint === '/streams/live') return this.getMockStreamAnalytics().top_streams;
+      if (targetEndpoint === '/streams/simulate') return this.getMockSimulatedStream();
       if (targetEndpoint.includes('/acknowledge')) return { status: 'acknowledged' };
     }
 
@@ -146,6 +149,96 @@ class ApiClient {
       { id: 'ALT-902', severity: 'WARNING', source: 'SNSR-002', message: 'High Kafka partition lag detected', time: '18:50:05' },
       { id: 'ALT-903', severity: 'INFO', source: 'SYSTEM', message: 'Automated DB backup completed successfully', time: '18:30:00' }
     ];
+  }
+
+  getMockStreamAnalytics() {
+    return {
+      total_active_streams: 4,
+      peak_concurrent_viewers: 6175,
+      avg_bitrate_kbps: 6092.5,
+      avg_dropped_frames_pct: 0.038,
+      total_chat_velocity: 682.0,
+      total_donations_usd: 1865.50,
+      categories: [
+        { category_name: 'Software Engineering', active_channels: 2, viewer_count: 2035 },
+        { category_name: 'Cyberpunk 2077', active_channels: 1, viewer_count: 3250 },
+        { category_name: 'Just Chatting', active_channels: 1, viewer_count: 890 }
+      ],
+      top_streams: [
+        {
+          id: 'str-001',
+          channel_name: 'AliceCodes',
+          streamer_name: 'Alice (Senior Eng)',
+          stream_title: '🚀 Building Distributed Event Pipeline with FastAPI & Kafka',
+          category: 'Software Engineering',
+          viewer_count: 1420 + Math.floor(Math.random() * 50),
+          peak_viewers: 1850,
+          bitrate_kbps: 6120.0,
+          fps: 60,
+          resolution: '1080p60',
+          dropped_frames_pct: 0.02,
+          chat_velocity_ppm: 185.0,
+          total_donations_usd: 350.0,
+          avatar_color: '#6366f1'
+        },
+        {
+          id: 'str-002',
+          channel_name: 'BobTheGamer',
+          streamer_name: 'Bob Pro',
+          stream_title: '🎮 Cyberpunk 2077 Night City Speedrun [100% World Record]',
+          category: 'Cyberpunk 2077',
+          viewer_count: 3250 + Math.floor(Math.random() * 100),
+          peak_viewers: 4100,
+          bitrate_kbps: 6500.0,
+          fps: 60,
+          resolution: '1080p60',
+          dropped_frames_pct: 0.08,
+          chat_velocity_ppm: 340.0,
+          total_donations_usd: 1240.0,
+          avatar_color: '#ec4899'
+        },
+        {
+          id: 'str-003',
+          channel_name: 'DevTalksLive',
+          streamer_name: 'Tech Community',
+          stream_title: '💬 Software Architecture Q&A: Async Python vs Go Routines',
+          category: 'Just Chatting',
+          viewer_count: 890 + Math.floor(Math.random() * 30),
+          peak_viewers: 1100,
+          bitrate_kbps: 5800.0,
+          fps: 60,
+          resolution: '1080p60',
+          dropped_frames_pct: 0.01,
+          chat_velocity_ppm: 95.0,
+          total_donations_usd: 180.5,
+          avatar_color: '#10b981'
+        },
+        {
+          id: 'str-004',
+          channel_name: 'RustMechanic',
+          streamer_name: 'Alex R',
+          stream_title: '🦀 High-Performance Memory Safety in Systems Programming',
+          category: 'Software Engineering',
+          viewer_count: 615 + Math.floor(Math.random() * 20),
+          peak_viewers: 750,
+          bitrate_kbps: 5950.0,
+          fps: 60,
+          resolution: '1080p60',
+          dropped_frames_pct: 0.04,
+          chat_velocity_ppm: 62.0,
+          total_donations_usd: 95.0,
+          avatar_color: '#f59e0b'
+        }
+      ]
+    };
+  }
+
+  getMockSimulatedStream() {
+    const mock = this.getMockStreamAnalytics().top_streams[0];
+    mock.viewer_count += 650;
+    mock.peak_viewers += 650;
+    mock.chat_velocity_ppm += 120;
+    return mock;
   }
 }
 

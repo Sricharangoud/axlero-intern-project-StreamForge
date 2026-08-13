@@ -139,6 +139,91 @@ class ChartController {
     data.push(value);
     this.throughputChart.update('none'); // Update smoothly without full redraw animation
   }
+
+  /**
+   * Initialize Live Stream Encoding Bitrate Bar/Line Chart
+   */
+  initStreamBitrateChart(streams = []) {
+    const ctx = document.getElementById('streamBitrateChart');
+    if (!ctx) return;
+
+    this.applyGlobalDefaults();
+
+    const channelNames = streams.length ? streams.map(s => s.channel_name) : ['AliceCodes', 'BobTheGamer', 'DevTalksLive', 'RustMechanic'];
+    const bitrates = streams.length ? streams.map(s => s.bitrate_kbps) : [6120, 6500, 5800, 5950];
+
+    if (this.streamBitrateChart) {
+      this.streamBitrateChart.data.labels = channelNames;
+      this.streamBitrateChart.data.datasets[0].data = bitrates;
+      this.streamBitrateChart.update();
+      return;
+    }
+
+    this.streamBitrateChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: channelNames,
+        datasets: [{
+          label: 'Bitrate (kbps)',
+          data: bitrates,
+          backgroundColor: ['#6366f1', '#ec4899', '#10b981', '#f59e0b'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, suggestedMax: 8000 }
+        }
+      }
+    });
+  }
+
+  /**
+   * Initialize Stream Chat Velocity & Viewer Chart
+   */
+  initStreamChatChart(streams = []) {
+    const ctx = document.getElementById('streamChatChart');
+    if (!ctx) return;
+
+    const channelNames = streams.length ? streams.map(s => s.channel_name) : ['AliceCodes', 'BobTheGamer', 'DevTalksLive', 'RustMechanic'];
+    const chatRates = streams.length ? streams.map(s => s.chat_velocity_ppm) : [185, 340, 95, 62];
+
+    if (this.streamChatChart) {
+      this.streamChatChart.data.labels = channelNames;
+      this.streamChatChart.data.datasets[0].data = chatRates;
+      this.streamChatChart.update();
+      return;
+    }
+
+    this.streamChatChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: channelNames,
+        datasets: [{
+          label: 'Chat Velocity (msgs/min)',
+          data: chatRates,
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.15)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true }
+        }
+      }
+    });
+  }
 }
 
 // Expose global Chart Controller
