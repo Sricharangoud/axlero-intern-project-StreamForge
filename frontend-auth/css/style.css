@@ -1,66 +1,120 @@
 /* ==========================================================================
    STREAMFORGE FRONTEND - BASE DESIGN TOKENS & STYLES (css/style.css)
+   Includes Dark & Pristine White Theme modes with smooth CSS variable transitions.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. CSS CUSTOM PROPERTIES (VARIABLES)
-   These variables define our design system color palette, spacing, fonts,
-   and visual effects (shadows, transitions) in one central location.
+   1. CSS CUSTOM PROPERTIES (THEME TOKENS)
    -------------------------------------------------------------------------- */
-:root {
-  /* Dark Theme Color Palette */
-  --bg-dark-900: #0a0e17;        /* Main page background (Deep obsidian) */
-  --bg-dark-800: #111827;        /* Primary card & sidebar background */
-  --bg-dark-700: #1f293d;        /* Hover state & secondary card background */
-  --bg-dark-600: #2d3748;        /* Border color & input backgrounds */
 
-  /* Text Colors */
-  --text-primary: #f3f4f6;      /* Primary high-contrast text (Off-white) */
-  --text-secondary: #9ca3af;    /* Muted text for labels & subtitles */
-  --text-dim: #6b7280;          /* Disabled or secondary hint text */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-  /* Accent & Status Colors */
-  --accent-blue: #3b82f6;       /* Primary interactive elements (Buttons, Links) */
-  --accent-blue-hover: #2563eb; /* Hover state for primary buttons */
-  --accent-cyan: #06b6d4;       /* Secondary metrics highlight (Chart lines) */
-  --accent-purple: #8b5cf6;     /* Gradient accent */
+/* Default Base & Dark Theme */
+:root,
+html[data-theme="dark"],
+body[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #0d0d0d;
+  --bg-tertiary: #161616;
+  --bg-input: #111111;
+  --bg-hover: #1c1c1c;
 
-  /* Status Indicators */
-  --status-success: #10b981;    /* Emerald green for Online/Success states */
-  --status-success-bg: rgba(16, 185, 129, 0.15);
-  --status-warning: #f59e0b;    /* Amber for Warning states */
-  --status-warning-bg: rgba(245, 158, 11, 0.15);
-  --status-danger: #ef4444;     /* Crimson red for Errors/Critical alerts */
-  --status-danger-bg: rgba(239, 68, 68, 0.15);
-  --status-info: #3b82f6;       /* Blue for Information notifications */
-  --status-info-bg: rgba(59, 130, 246, 0.15);
+  --bg-dark-900: #000000;
+  --bg-dark-800: #0d0d0d;
+  --bg-dark-700: #161616;
+  --bg-dark-600: #222222;
 
-  /* Typography */
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-dim: #71717a;
+
+  --accent-blue: #38bdf8;
+  --accent-blue-hover: #0284c7;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a855f7;
+  --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+
+  --status-success: #10b981;
+  --status-success-bg: rgba(16, 185, 129, 0.1);
+  --status-warning: #f59e0b;
+  --status-warning-bg: rgba(245, 158, 11, 0.1);
+  --status-danger: #ef4444;
+  --status-danger-bg: rgba(239, 68, 68, 0.1);
+  --status-info: #38bdf8;
+  --status-info-bg: rgba(56, 189, 248, 0.1);
+
+  --navbar-bg: #000000;
+  --sidebar-bg: #000000;
+  --border-color: #1e1e1e;
+  --border-hover: #333333;
+  --input-border: #27272a;
+
+  --card-shadow: none;
+  --glow-accent: none;
+
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  /* Layout Dimensions */
-  --sidebar-width: 260px;
-  --sidebar-collapsed-width: 70px;
-  --navbar-height: 65px;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --navbar-height: 56px;
 
-  /* Shadows & Glassmorphism */
-  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-  --glow-accent: 0 0 15px rgba(59, 130, 246, 0.3);
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 16px;
-  --border-color: rgba(255, 255, 255, 0.08);
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
 
-  /* Transitions */
   --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
+  --transition-normal: 0.25s ease;
+  --theme-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Light Pristine White Theme Overrides */
+html[data-theme="light"],
+body[data-theme="light"] {
+  --bg-primary: #fafafa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f4f4f5;
+  --bg-input: #ffffff;
+  --bg-hover: #e4e4e7;
+
+  --bg-dark-900: #ffffff;
+  --bg-dark-800: #fafafa;
+  --bg-dark-700: #f4f4f5;
+  --bg-dark-600: #e4e4e7;
+
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-dim: #71717a;
+
+  --accent-blue: #0284c7;
+  --accent-blue-hover: #0369a1;
+  --accent-cyan: #0891b2;
+  --accent-purple: #9333ea;
+  --accent-gradient: linear-gradient(135deg, #0284c7 0%, #9333ea 100%);
+
+  --status-success: #059669;
+  --status-success-bg: rgba(5, 150, 105, 0.1);
+  --status-warning: #d97706;
+  --status-warning-bg: rgba(217, 119, 6, 0.1);
+  --status-danger: #dc2626;
+  --status-danger-bg: rgba(220, 38, 38, 0.1);
+  --status-info: #0284c7;
+  --status-info-bg: rgba(2, 132, 199, 0.1);
+
+  --navbar-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --border-color: #e4e4e7;
+  --border-hover: #d4d4d8;
+  --input-border: #d4d4d8;
+
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --glow-accent: none;
 }
 
 /* --------------------------------------------------------------------------
    2. GLOBAL RESET & BASE STYLES
    -------------------------------------------------------------------------- */
 *, *::before, *::after {
-  box-sizing: border-box; /* Ensures padding & borders don't exceed set dimensions */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
@@ -69,11 +123,12 @@ html, body {
   width: 100%;
   height: 100%;
   font-family: var(--font-family);
-  background-color: var(--bg-dark-900);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.5;
-  overflow-x: hidden; /* Prevents unwanted horizontal scrollbars */
-  -webkit-font-smoothing: antialiased; /* Crisp text rendering on mac/Webkit */
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: var(--theme-transition);
 }
 
 /* Scrollbar Customization */
@@ -82,10 +137,10 @@ html, body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark-900);
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-dark-700);
+  background: var(--bg-tertiary);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -96,7 +151,7 @@ html, body {
    3. UTILITY & HELPER CLASSES
    -------------------------------------------------------------------------- */
 .hidden {
-  display: none !important; /* Hides elements from DOM visual layout */
+  display: none !important;
 }
 
 .flex-center {
@@ -121,6 +176,7 @@ html, body {
   border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: var(--theme-transition);
 }
 
 .badge-success {
@@ -143,6 +199,6 @@ html, body {
 
 .badge-info {
   background-color: var(--status-info-bg);
-  color: var(--status-info);
+  color: var(--accent-blue);
   border: 1px solid rgba(59, 130, 246, 0.3);
 }

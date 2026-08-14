@@ -17,7 +17,8 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/dashboard.css">
 
-  <!-- Chart.js Library CDN -->
+  <!-- Theme Manager & Chart.js Library CDN -->
+  <script src="js/theme.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -37,6 +38,12 @@
        ========================================================================== -->
   <div id="login-view" class="login-overlay">
     <div class="login-card">
+      <div class="login-theme-switcher">
+        <button id="login-theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+          <i class="fa-solid fa-sun"></i>
+        </button>
+      </div>
+
       <div class="login-header">
         <div class="login-logo"><i class="fa-solid fa-bolt"></i></div>
         <h2 style="font-size: 1.5rem; font-weight: 700;">StreamForge</h2>
@@ -82,6 +89,11 @@
     </div>
 
     <div class="navbar-right">
+      <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-sun"></i>
+        <span class="theme-toggle-label">Theme</span>
+      </button>
+
       <div class="api-status-indicator">
         <span id="api-status-dot" class="status-dot"></span>
         <span id="api-status-text">FastAPI Connected</span>

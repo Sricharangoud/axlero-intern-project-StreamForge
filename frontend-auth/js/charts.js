@@ -72,6 +72,19 @@ class ChartController {
     });
   }
 
+  getThemeColors(theme = null) {
+    const isLight = (theme || document.documentElement.getAttribute('data-theme')) === 'light';
+    return {
+      textColor: isLight ? '#475569' : '#a1a1aa',
+      gridColor: isLight ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.06)',
+      tooltipBg: isLight ? '#ffffff' : '#000000',
+      tooltipText: isLight ? '#0f172a' : '#ffffff',
+      tooltipBorder: isLight ? 'rgba(0, 0, 0, 0.12)' : '#262626',
+      lineColor: isLight ? '#2563eb' : '#38bdf8',
+      lineFillBg: isLight ? 'rgba(37, 99, 235, 0.12)' : 'rgba(56, 189, 248, 0.08)',
+    };
+  }
+
   /**
    * Initialize Sensor Temperature Distribution Bar Chart
    */
